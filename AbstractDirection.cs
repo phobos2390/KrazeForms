@@ -35,6 +35,8 @@ namespace KrazeForms
 
         public abstract bool CorrespondsToDirectionEnum(Direction direction);
 
+        public abstract Direction GetDirectionEnum();
+
         public Point InteractionSpace(Point current)
         {
             Point returnCurrent = new Point(current.X + dY,current.Y + dX);

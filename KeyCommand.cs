@@ -50,6 +50,14 @@ namespace KrazeForms
             }
         }
 
+        public Direction CommandDirection
+        {
+            get
+            {
+                return this.direction.GetDirectionEnum();
+            }
+        }
+
         public void ExecuteCommand()
         {
             if (executed != null)

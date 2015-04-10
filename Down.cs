@@ -14,5 +14,10 @@ namespace KrazeForms
         {
             return direction == Direction.Down;
         }
+
+        public override Direction GetDirectionEnum()
+        {
+            return Direction.Down;
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace KrazeForms
         }
         bool MovesInThatDirection(int deltaX, int deltaY);
         bool CorrespondsToDirectionEnum(Direction direction);
+        Direction GetDirectionEnum();
         Point InteractionSpace(Point current);
     }
 }

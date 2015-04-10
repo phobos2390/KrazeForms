@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KrazeForms
 {
-    class Map
+    public class Map
     {
         private ISpace[,] spaces;
 

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace KrazeForms
 {
-    interface ISpace
+    public interface ISpace
     {
         Image Texture
         {

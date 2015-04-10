@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace KrazeForms
 {
-    public enum Direction
+    public interface IGraphTraversalStrategy
     {
-        Up,
-        Down,
-        Left,
-        Right,
-        None
+        void Traverse<T>(Graph<T> graph, Action<T> visitor);
     }
 }

@@ -37,7 +37,7 @@ namespace KrazeForms
 
         public bool PlayerCanMoveIntoSpace(Player thePlayer)
         {
-            return true;// !hasKey;
+            return true;
         }
 
         public void InteractWithPlayer(Player thePlayer)
@@ -51,7 +51,14 @@ namespace KrazeForms
 
         public char FileOutput()
         {
-            return 'K';
+            if (hasKey)
+            {
+                return 'K';
+            }
+            else
+            {
+                return ' ';
+            }
         }
     }
 }

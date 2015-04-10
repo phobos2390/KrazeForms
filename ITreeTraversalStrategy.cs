@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace KrazeForms
 {
-    public enum Direction
+    public interface ITreeTraversalStrategy
     {
-        Up,
-        Down,
-        Left,
-        Right,
-        None
+        void Traverse<T>(Tree<T> tree, Action<T> visitor);
     }
 }

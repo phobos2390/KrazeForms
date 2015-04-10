@@ -12,7 +12,12 @@ namespace KrazeForms
 
         public override bool CorrespondsToDirectionEnum(Direction direction)
         {
-            return false;
+            return (direction == Direction.None);
         }
+
+        public override Direction GetDirectionEnum()
+        {
+            return Direction.None;
+        }
     }
 }

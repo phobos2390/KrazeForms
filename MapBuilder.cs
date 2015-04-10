@@ -40,6 +40,15 @@ namespace KrazeForms
             return this;
         }
 
+        public MapBuilder CreateEmptySpace(int row, int col)
+        {
+            if (arrCreated)
+            {
+                spaces[row, col] = SpaceFactory.CreateEmptySpace();
+            }
+            return this;
+        }
+
         public MapBuilder CreateWall(int row, int col)
         {
             if (arrCreated)
@@ -56,6 +65,33 @@ namespace KrazeForms
                 spaces[row, col] = space;
             }
             return this;
+        }
+
+        public Direction DirectionOpenAroundSpace(int row, int col)
+        {
+            foreach(Direction dir in Enum.GetValues(Direction.Right.GetType()))
+            {
+                IDirection direction = DirectionFactory.CreateDirection(dir);
+                Point newPoint = direction.InteractionSpace(new Point(row, col));
+                ISpace newSpace = this.spaces[newPoint.X, newPoint.Y];
+                if (newSpace.FileOutput() == ' ')
+                {
+                    return dir;
+                }
+            }
+            return Direction.None;
+        }
+
+        public bool SpaceOccupied(int row, int col)
+        {
+            if (this.spaces[row, col] != null)
+            {
+                return this.spaces[row, col].FileOutput() != ' ';
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public MapBuilder SetSpaces(int row, int col, ISpace space, int rowNum, int colNum)
@@ -119,6 +155,31 @@ namespace KrazeForms
             return this.SetSpaces(row, col, SpaceFactory.CreateDoor(numKeys), rowNum, colNum);
         }
 
+        public MapBuilder CreateFilledMapPattern(int row, int col, int rowNum, int colNum)
+        {
+            bool emptyCol = true;
+            bool emptyRow = false;
+            for (int i = 0; i < rowNum; i++)
+            {
+                for (int j = 0; j < colNum; j++)
+                {
+                    int currRow = row + i;
+                    int currCol = col + j;
+                    if (emptyRow && emptyCol)
+                    {
+                        this.CreateEmptySpace(currRow, currCol);
+                    }
+                    else
+                    {
+                        this.CreateWall(currRow, currCol);
+                    }
+                    emptyCol = !emptyCol;
+                }
+                emptyRow = !emptyRow;
+            }
+            return this;
+        }
+
         public MapBuilder CreateBaseMapPattern(int row, int col, int rowNum, int colNum)
         {
             bool wallCol = true;
@@ -132,6 +193,10 @@ namespace KrazeForms
                     if (wallRow && wallCol)
                     {
                         this.CreateWall(currRow, currCol);
+                    }
+                    else
+                    {
+                        this.CreateEmptySpace(currRow, currCol);
                     }
                     wallCol = !wallCol;
                 }

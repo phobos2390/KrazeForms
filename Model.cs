@@ -18,11 +18,19 @@ namespace KrazeForms
             this.player = player;
         }
 
+        public Model(String mapFileName, String playerFileName)
+        {
+            this.Load(playerFileName, mapFileName);
+        }
+
         public bool CanMovePlayer(Direction moveDirection)
         {
             IDirection dir = DirectionFactory.CreateDirection(moveDirection);
             Point newPoint = dir.InteractionSpace(player.PlayerPosition);
-            if (newPoint.X >= this.map.Rows || newPoint.Y >= this.map.Columns)
+            if (newPoint.X >= this.map.Rows 
+                || newPoint.Y >= this.map.Columns
+                ||newPoint.X < 0 
+                || newPoint.Y < 0)
             {
                 return false;
             }
@@ -39,6 +47,10 @@ namespace KrazeForms
             Point newPoint = dir.InteractionSpace(player.PlayerPosition);
             ISpace toMoveTo = this.map[newPoint.X, newPoint.Y];
             toMoveTo.InteractWithPlayer(player);
+            if (moveDirection != Direction.None)
+            {
+                player.CurrentDirection = dir;
+            }
             player.PlayerPosition = newPoint;
         }
 
@@ -50,9 +62,39 @@ namespace KrazeForms
             toMoveTo.InteractWithPlayer(player);
         }
 
+        public IDirection GetPlayerDirection()
+        {
+            return this.player.CurrentDirection;
+        }
+
+        public int GetNumberOfKeys()
+        {
+            return this.player.NumberOfKeys;
+        }
+
+        public Point GetPlayerPosition()
+        {
+            return this.player.PlayerPosition;
+        }
+
+        public Point GetSelectedPoint()
+        {
+            return this.player.CurrentDirection.InteractionSpace(this.player.PlayerPosition);
+        }
+
         public ISpace GetSpace(int x, int y)
         {
             return this.map[x, y];
+        }
+
+        public int GetRows()
+        {
+            return this.map.Rows;
+        }
+
+        public int GetColumns()
+        {
+            return this.map.Columns;
         }
 
         public bool Won
@@ -118,7 +160,7 @@ namespace KrazeForms
             int index2 = Int16.Parse(fileReader.ReadLine());
             MapBuilder builder = new MapBuilder();
             builder.SetHeight(index)
-                   .SetWidth(index);
+                   .SetWidth(index2);
             for (int i = 0; i < index; i++)
             {
                 buffer = fileReader.ReadLine();
@@ -140,7 +182,7 @@ namespace KrazeForms
                     {
                         num = 1;
                     }
-                    builder.SetSpaces(i, colIter, SpaceFactory.CreateSpaceFromChar(check), 1, num);
+                    builder.SetSpaces(i, colIter, SpaceFactory.CreateSpaceFromChar(buffer[j]), 1, num);
                     colIter += num;
                 }
             }

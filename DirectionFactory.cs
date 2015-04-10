@@ -17,6 +17,7 @@ namespace KrazeForms
             returnList.Add(new Down());
             returnList.Add(new Left());
             returnList.Add(new Right());
+            returnList.Add(new NoDirection());
             return returnList;
         }
 
