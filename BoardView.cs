@@ -12,6 +12,8 @@ namespace KrazeForms
     {
         private int widthConstant;
         private int heightConstant;
+        private int viewHeight;
+        private int viewWidth;
         private bool showHighlighted;
         private Label keysIndicator;
         private Label NumberOfKeys;
@@ -19,25 +21,30 @@ namespace KrazeForms
         private BoardController controller;
         private IDirection lastDirection;
 
-        public BoardView(BoardController controller)
+        public BoardView(BoardController controller, int viewHeight, int viewWidth)
         {
             //SpaceFactory.SetImageFactory(new BiggerTextureFactory());
             this.controller = controller;
             KeyDown += KeyDownEvent;
-            this.initSize();
+            this.initSize(viewHeight,viewWidth);
             this.initKeyLabel();
             this.initCommands();
             this.DoubleBuffered = true;
             this.showHighlighted = true;
         }
 
-        private void initSize()
+        public BoardView(BoardController controller)
+            :this(controller, controller.GetRows(), controller.GetColumns()){}
+
+        private void initSize(int viewHeight, int viewWidth)
         {
             this.widthConstant = SpaceFactory.GetSpaceWidthConstant();
             this.heightConstant = SpaceFactory.GetSpaceHeightConstant();
 
-            this.Height = this.heightConstant * this.controller.GetRows();
-            this.Width = this.widthConstant * (this.controller.GetColumns() + 3);
+            this.viewHeight = viewHeight;
+            this.viewWidth = viewWidth;
+            this.Height = this.heightConstant * viewHeight;
+            this.Width = this.widthConstant * (viewWidth + 3);
         }
 
         private void initKeyLabel()
@@ -50,8 +57,10 @@ namespace KrazeForms
             NumberOfKeys = new Label();
             NumberOfKeys.Text = "" + this.controller.GetNumberOfKeys();
             NumberOfKeys.Font = new Font(FontFamily.GenericMonospace, (this.heightConstant * 0.75f));
-            keysIndicator.Location = new System.Drawing.Point(this.controller.GetColumns() * this.widthConstant, 10);
-            NumberOfKeys.Location = new System.Drawing.Point(this.controller.GetColumns() * this.widthConstant + this.heightConstant*7/8, 10 + this.heightConstant);
+            //keysIndicator.Location = new System.Drawing.Point(this.controller.GetColumns() * this.widthConstant, 10);
+            //NumberOfKeys.Location = new System.Drawing.Point(this.controller.GetColumns() * this.widthConstant + this.heightConstant*7/8, 10 + this.heightConstant);
+            keysIndicator.Location = new System.Drawing.Point(this.viewWidth * this.widthConstant, 10);
+            NumberOfKeys.Location = new System.Drawing.Point(this.viewWidth * this.widthConstant + this.heightConstant * 7 / 8, 10 + this.heightConstant);
             Controls.Add(NumberOfKeys);
         }
 
@@ -103,26 +112,45 @@ namespace KrazeForms
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(e);
+            //base.OnPaint(e);
             drawBoard(e.Graphics);
             this.NumberOfKeys.Text = "" + this.controller.GetNumberOfKeys();
         }
 
         private void drawBoard(Graphics g)
         {
-            for (int i = 0; i < this.controller.GetRows(); i++)
+            //for (int i = 0; i < this.controller.GetRows(); i++)
+            //{
+            //    for (int j = 0; j < this.controller.GetColumns(); j++)
+            //    {
+            //        g.DrawImage(this.controller.GetSpace(i,j).Texture, j * this.widthConstant, i * this.heightConstant);
+            //    }
+            //}
+            Point playerPosition = this.controller.GetPlayerPosition();
+            for (int i = 0; i < this.viewHeight; i++)
             {
-                for (int j = 0; j < this.controller.GetColumns(); j++)
+                for (int j = 0; j < this.viewWidth; j++)
                 {
-                    g.DrawImage(this.controller.GetSpace(i,j).Texture, j * this.widthConstant, i * this.heightConstant);
+                    int row = playerPosition.X + (i - this.viewHeight / 2);
+                    int col = playerPosition.Y + (j - this.viewWidth / 2);
+                    bool validRow = 0 <= row && row < this.controller.GetRows();
+                    bool validCol = 0 <= col && col < this.controller.GetColumns();
+                    if (validCol && validRow)
+                    {
+                        g.DrawImage(this.controller.GetSpace(row, col).Texture, j * this.widthConstant, i * this.heightConstant);
+                    }
                 }
             }
-            Point playerPosition = this.controller.GetPlayerPosition();
-            g.DrawImage(SpaceFactory.CreateImage(SpaceType.Empty), playerPosition.Y * this.widthConstant, playerPosition.X * this.heightConstant);
-            g.DrawImage(SpaceFactory.CreatePlayerImage(this.lastDirection), playerPosition.Y * this.widthConstant, playerPosition.X * this.heightConstant);
+            //g.DrawImage(SpaceFactory.CreateImage(SpaceType.Empty), playerPosition.Y * this.widthConstant, playerPosition.X * this.heightConstant);
+            //g.DrawImage(SpaceFactory.CreatePlayerImage(this.lastDirection), playerPosition.Y * this.widthConstant, playerPosition.X * this.heightConstant);
+            Point playerTilePosition = new Point(this.viewWidth/2, this.viewHeight/2);
+            Point playerScreenPosition = new Point(playerTilePosition.X * this.widthConstant,playerTilePosition.Y * this.heightConstant);
+            g.DrawImage(SpaceFactory.CreateImage(SpaceType.Empty), playerScreenPosition);
+            g.DrawImage(SpaceFactory.CreatePlayerImage(this.lastDirection), playerScreenPosition);
             if (this.showHighlighted)
             {
-                Point selectedPoint = this.lastDirection.InteractionSpace(playerPosition);
+//                Point selectedPoint = this.lastDirection.InteractionSpace(playerPosition);
+                Point selectedPoint = this.lastDirection.InteractionSpace(playerTilePosition);
                 g.DrawImage(SpaceFactory.CreateSelectedImage(), selectedPoint.Y * this.widthConstant, selectedPoint.X * this.heightConstant);
             }
         }

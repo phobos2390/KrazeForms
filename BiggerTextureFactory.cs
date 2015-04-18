@@ -9,8 +9,8 @@ namespace KrazeForms
 {
     class BiggerTextureFactory:IImageFactory
     {
-        private static int HEIGHTCONSTANT = 30;
-        private static int WIDTHCONSTANT = 30;
+        private static int HEIGHTCONSTANT = 50;
+        private static int WIDTHCONSTANT = 50;
         private static string basePath = "BiggerTextures\\";
 
         private static IList<Tuple<SpaceType, Image, int>> images = initImages();

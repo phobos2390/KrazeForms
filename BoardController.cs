@@ -20,6 +20,12 @@ namespace KrazeForms
             this.view = new BoardView(this);
         }
 
+        public BoardController(Model model, int viewHeight, int viewWidth)
+        {
+            this.model = model;
+            this.view = new BoardView(this,viewHeight,viewWidth);
+        }
+
         public BoardView View
         {
             get

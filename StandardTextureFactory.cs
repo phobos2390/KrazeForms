@@ -9,8 +9,8 @@ namespace KrazeForms
 {
     class StandardTextureFactory:IImageFactory
     {
-        private static int HEIGHTCONSTANT = 15;
-        private static int WIDTHCONSTANT = 15;
+        private static int HEIGHTCONSTANT = 10;
+        private static int WIDTHCONSTANT = 10;
 
         private static IList<Tuple<SpaceType, Image, int>> images = initImages();
         private static Image selectedImage = initSelectedImage();

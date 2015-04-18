@@ -18,7 +18,7 @@ namespace KrazeForms
         {
             Player player = new Player(0, new Point(1, 1));
             MazeGraphBuilder builder = new MazeGraphBuilder();
-            builder.SetSize(25, 29);
+            builder.SetSize(51,51);
             builder.CreateGraph();
             Map map = builder.CreateMapFromSpanningTree();
             this.model = new Model(map, player);
@@ -29,7 +29,8 @@ namespace KrazeForms
             //builder.SetWallsAroundRectangle(0, 0, 35, 35);
             //builder.CreateWinSpace(34, 23);
             //this.model = new Model(builder.CreateMap(), player);//*/"Maze3","Player Stats");
-            this.controller = new BoardController(this.model);
+            SpaceFactory.SetImageFactory(new BiggerTextureFactory());
+            this.controller = new BoardController(this.model,10,10);
             this.board = this.controller.View;
             this.board.Visible = true;
             this.ClientSize = this.board.Size;
